@@ -38,7 +38,7 @@ var shipShoot = function ($ship) {
   var bullet = new Bullet($ship);
   $('#'+bullet.id).css("left", "+="+bullet.xPosition);
   var counter = 0;
-  while(counter < 100){//unimpeded(bullet)){
+  while(counter < 300){//unimpeded(bullet)){
     bullet.yPosition -= 10;
     counter += 10;
     debugger;
