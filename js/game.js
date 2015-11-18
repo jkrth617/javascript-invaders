@@ -42,7 +42,7 @@ var shipShoot = function ($ship) {
     bullet.yPosition -= 10;
     counter += 10;
     debugger;
-    $('#'+bullet.id).animate({ top: bullet.yPosition });
+    $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
   } 
 
 };
@@ -51,7 +51,7 @@ var moveShip = function ($target, movement) {
   var pos = $target.position().left;
   if (onScreen(pos)){
     var newPos = pos + movement + "";//coerce into a string
-    $target.animate({ left: newPos });
+    $target.animate({ left: newPos }, 100);
   }
 };
 
