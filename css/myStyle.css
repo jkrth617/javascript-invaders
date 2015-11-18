@@ -3,3 +3,9 @@
 	top:50%;
 	left:650px;
 }
+
+.bullet{
+	top:50%;
+	left:0px;
+	position: absolute;
+}
