@@ -83,6 +83,7 @@ Bullet.prototype.hit = function () {
   // this.game.army.//forEach(function(alien){
   var aliens = bullet.game.enemies;
   for(var i = 0; i < aliens.length; i++){
+    console.log("in bullet hit loop");
     var alien = aliens[i];
     var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
