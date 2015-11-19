@@ -15,7 +15,7 @@ $(document).on('ready', function(e) {
       break;
 
       case 32:
-        shipShoot($ship);
+        shipShoot($ship, game);
       break
 
       default: return; // exit this handler for other keys
@@ -26,7 +26,8 @@ $(document).on('ready', function(e) {
 
 var bulletCounter = 0;
 
-var Bullet = function Bullet(ship) {
+var Bullet = function Bullet(ship, game) {
+  this.game = game;//refactor to make ship apart of the game so that I can just pass ship in
   var startingPosition = ship.position();
   this.xPosition = startingPosition.left;
   this.yPosition = startingPosition.top;
@@ -35,15 +36,14 @@ var Bullet = function Bullet(ship) {
   this.id = "bullet"+bulletCounter;
 };
 
-var shipShoot = function ($ship) {
+var shipShoot = function ($ship, game) {
   console.log('bang');
-  var bullet = new Bullet($ship);
+  var bullet = new Bullet($ship, game);
   $('#'+bullet.id).css("left", "+="+bullet.xPosition);
   var counter = 0;
-  while(counter < 350){//unimpeded(bullet)){
+  while(bullet.unimpeded()){//unimpeded(bullet)){
     bullet.yPosition -= 10;
     counter += 10;
-    debugger;
     $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
   } 
 
@@ -61,8 +61,44 @@ var onScreen = function (position) {
   return true;
 };
 
-var unimpeded = function (bullet) {
-  return true;
+Bullet.prototype.unimpeded = function () {
+  var bullet = this;
+  var enemyHit = bullet.hit();
+  if (enemyHit){
+    $(enemyHit).remove();
+    $(bullet).remove();
+    return false;    
+  }
+  if (bullet.offScreen()){
+    $(bullet).remove();
+    return false;
+  }
+  else{
+    return true;
+  }
+};
+
+Bullet.prototype.hit = function () {
+  var bullet = this;
+  // this.game.army.//forEach(function(alien){
+  var aliens = bullet.game.enemies;
+  for(var i = 0; i < aliens.length; i++){
+    var alien = aliens[i];
+    var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
+    var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
+    if (i = 80){
+      // debugger;
+    }
+    if (yDistance <= 5 && xDistance <=5){
+      debugger;
+      return alien;
+    }
+  }
+  return false;
+};
+
+Bullet.prototype.offScreen = function () {
+  return false;//write this later
 };
 
 var alienCounter = 0;
