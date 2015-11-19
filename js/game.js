@@ -1,6 +1,6 @@
 $(document).on('ready', function(e) {
   
-  alienSetUp();
+  var game = new Game;
 
   $(document).keydown(function(e) {
     e.preventDefault(); // prevent the default action (scroll / move caret)
@@ -70,30 +70,44 @@ var alienCounter = 0;
 var Alien = function Alien () {
   this.id = alienCounter;
   alienCounter++;  
-  this.content = "<span id = alien"+this.id+"' class='alien'>W</span>";
+  this.content = "<span id = alien"+this.id+" class='alien'>W</span>";
   this.xPosition = this.calcXPosition(this.id);
   this.yPosition = this.calcYPosition(this.id);
 };
 
 Alien.prototype.calcXPosition = function(id) {
-  var row = id%4;
-  var pos = 50 * row;
+  var row = id%20;
+  var pos = 25 * row;
   return pos;//could just returnthe above line but maybe i want to mess with it more
 };
 
 Alien.prototype.calcYPosition = function(id) {
-  var row = Math.floor(id/5);
-  var pos = 50 * row;
+  var row = Math.floor(id/20);
+  var pos = 25 * row;
   return pos;//could just returnthe above line but maybe i want to mess with it more
 };
 //I can refactor this to just accept another thing like the 10 or 20 to DRY out the function calls but I dont know how its going to play out right now
 
-var alienSetUp = function () {
+var Game = function Game () {
+  this.$container = $("#invading-army");
+  this.enemies = this.alienSetUp(); 
+  this.placeAliensOnPage();
+};
+
+Game.prototype.alienSetUp = function () {
+  var army = [];
   for(var i = 0; i < 80; i++){
-    var alien = new Alien;
-    $('#invading-army').append(alien.content);
-    $('#alien'+this.id).css("left", "+="+alien.xPosition);
-    $('#alien'+this.id).css("top", "-="+alien.yPosition);
-    debugger;
+    army.push(new Alien);
+    // $('#invading-army').append(alien.content);
   }
+  return army;
+};
+
+Game.prototype.placeAliensOnPage = function () {
+  var self = this;
+  self.enemies.forEach(function(alien){
+    self.$container.append(alien.content);
+    $('#invading-army #alien'+alien.id).css("left", "+="+alien.xPosition);
+    $('#invading-army #alien'+alien.id).css("top", "+="+alien.yPosition);    
+  })
 };
