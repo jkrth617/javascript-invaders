@@ -92,7 +92,7 @@ Bullet.prototype.hit = function () {
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
     if (i == 79){
     }
-    if (yDistance <= 10 && xDistance <=10){
+    if (yDistance <= 20 && xDistance <=20){
       var hitId = alien.id;
       bullet.game.enemies = _.reject(aliens, function(alien){ return alien.id == hitId; });
       return hitId;
@@ -144,7 +144,7 @@ Game.prototype.startMotion = function () {
   // var advancingArmy = this.enemies;
   var self = this;
   var x = 0;
-  while (x<40){//self.gameInProgress()){
+  while (x<1000){//self.gameInProgress()){
     self.shiftControl();
     x++;
   }
