@@ -92,7 +92,7 @@ Bullet.prototype.hit = function () {
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
     if (i == 79){
     }
-    if (yDistance <= 20 && xDistance <=20){
+    if (yDistance <= 10 && xDistance <=10){
       debugger;
       var hitId = alien.id;
       bullet.game.enemies = _.reject(aliens, function(alien){ return alien.id == hitId; });
