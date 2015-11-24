@@ -68,7 +68,7 @@ Bullet.prototype.unimpeded = function () {
     setTimeout(function(){
       $("#alien"+enemyHitId).remove();
       $("#"+bullet.id).remove();
-    }, 2500);
+    }, 1500);
     return false;    
   }
   else if (bullet.offScreen()){
@@ -93,7 +93,6 @@ Bullet.prototype.hit = function () {
     if (i == 79){
     }
     if (yDistance <= 10 && xDistance <=10){
-      debugger;
       var hitId = alien.id;
       bullet.game.enemies = _.reject(aliens, function(alien){ return alien.id == hitId; });
       return hitId;
@@ -144,8 +143,10 @@ var Game = function Game () {
 Game.prototype.startMotion = function () {
   // var advancingArmy = this.enemies;
   var self = this;
-  while (self.gameInProgress()){
+  var x = 0;
+  while (x<40){//self.gameInProgress()){
     self.shiftControl();
+    x++;
   }
 };
 
@@ -171,11 +172,22 @@ var self = this;
   }
 };
 
+Game.prototype.againstBound = function () {
+  var self = this;
+  var advancingArmy = self.enemies;
+  for(var i = 0; i < advancingArmy.length; i++){
+    if((self.shifter < 0 && advancingArmy[i].xPosition <=5)||(self.shifter > 0 && advancingArmy[i].xPosition >=1245)){
+      return true;
+    }
+  }
+  return false;
+};
+
 Game.prototype.shiftDown = function () {
   var self = this;
   var advancingArmy = self.enemies;
   advancingArmy.forEach(function(alien){
-    alien.yPosition-=20;
+    alien.yPosition+=20;
     $('#alien'+alien.id).animate({ top: alien.yPosition }, 200);
   })
 };
