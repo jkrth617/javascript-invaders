@@ -141,7 +141,6 @@ var Game = function Game () {
 };
 
 Game.prototype.startMotion = function () {
-  // var advancingArmy = this.enemies;
   var self = this;
   var x = 0;
   while (x<1000){//self.gameInProgress()){
