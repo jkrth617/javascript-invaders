@@ -136,7 +136,57 @@ Alien.prototype.calcYPosition = function(id) {
 var Game = function Game () {
   this.$container = $("#invading-army");
   this.enemies = this.alienSetUp(); 
+  this.shifter = 20;
   this.placeAliensOnPage();
+  this.startMotion();
+};
+
+Game.prototype.startMotion = function () {
+  // var advancingArmy = this.enemies;
+  var self = this;
+  while (self.gameInProgress()){
+    self.shiftControl();
+  }
+};
+
+Game.prototype.gameInProgress = function () {
+  var army = this.enemies;
+  for(var i = 0;i<army.length;i++){
+    if (army[i].yPosition>=210){
+      alert("game over");
+      return false;
+    }
+  }
+  return true;
+}
+
+Game.prototype.shiftControl = function () {
+var self = this;
+  if(self.againstBound()){
+    self.shiftDown();
+    self.shifter *= -1;
+    // self.shiftControl(shifter*-1);
+  }else{
+    self.shift();
+  }
+};
+
+Game.prototype.shiftDown = function () {
+  var self = this;
+  var advancingArmy = self.enemies;
+  advancingArmy.forEach(function(alien){
+    alien.yPosition-=20;
+    $('#alien'+alien.id).animate({ top: alien.yPosition }, 200);
+  })
+};
+
+Game.prototype.shift = function () {
+  var self = this;
+  var advancingArmy = self.enemies;
+  advancingArmy.forEach(function(alien){
+    alien.xPosition+=self.shifter;
+    $('#alien'+alien.id).animate({ left: alien.xPosition }, 200);
+  })
 };
 
 Game.prototype.alienSetUp = function () {
