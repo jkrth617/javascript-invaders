@@ -7,11 +7,11 @@ $(document).on('ready', function(e) {
     var $ship = $('#space-ship');
     switch(e.which) {
       case 37: // left
-        moveShip($ship, -40);
+        moveShip($ship, -20);
       break;
 
       case 39: // right
-        moveShip($ship, 40);
+        moveShip($ship, 20);
       break;
 
       case 32:
@@ -67,8 +67,11 @@ Bullet.prototype.unimpeded = function () {
   var bullet = this;
   var enemyHit = bullet.hit();
   if (enemyHit){
-    $(enemyHit).remove();
-    $(bullet).remove();
+    // debugger;
+    setTimeout(function(){
+      $("#alien"+enemyHit.id).remove();
+      $("#"+bullet.id).remove();
+    }, 2500);
     return false;    
   }
   else if (bullet.offScreen()){
@@ -93,11 +96,9 @@ Bullet.prototype.hit = function () {
     var alien = aliens[i];
     var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
-    if (i = 80){
-      // debugger;
+    if (i == 79){
     }
-    if (yDistance <= 5 && xDistance <=5){
-      debugger;
+    if (yDistance <= 20 && xDistance <=20){
       return alien;
     }
   }
