@@ -137,7 +137,7 @@ var Game = function Game () {
   this.enemies = this.alienSetUp(); 
   this.shifter = 20;
   this.placeAliensOnPage();
-  this.startMotion();
+  //this.startMotion();
 };
 
 Game.prototype.startMotion = function () {
