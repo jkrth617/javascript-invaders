@@ -1,27 +1,31 @@
+body{
+	background-image: url("../img/space.png");
+	background-size: 100%;
+}
+
 #space-ship{
+	width: 20px;
+	height: 20px;
+	content: url("../img/spaceship.png");
 	position: absolute;
 	top:50%;
 	left:650px;
 }
 
 .bullet{
+	content: url("../img/missile.png");	
+	width: 10px;
+	height: 10px;
 	top:50%;
 	left:0px;
 	position: absolute;
 }
 
 .alien{
+	content: url("../img/ufo.png");
+	width: 20px;
+	height: 20px;
 	top:0px;
 	left:0px;
 	position: absolute;	
-}
-
-#place{
-	top:0px;
-	right:0px;
-	position: absolute;
-}
-
-#alien79{
-	color: red;
 }
