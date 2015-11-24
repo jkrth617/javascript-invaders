@@ -42,6 +42,7 @@ var shipShoot = function ($ship, game) {
   $('#'+bullet.id).css("left", "+="+bullet.xPosition);
   var counter = 0;
   while(bullet.unimpeded()){//unimpeded(bullet)){
+  console.log("while unimpeded")
     bullet.yPosition -= 10;
     counter += 10;
     $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
@@ -62,6 +63,7 @@ var onScreen = function (position) {
 };
 
 Bullet.prototype.unimpeded = function () {
+  console.log(this.yPosition, "YPOS")
   var bullet = this;
   var enemyHit = bullet.hit();
   if (enemyHit){
@@ -69,8 +71,10 @@ Bullet.prototype.unimpeded = function () {
     $(bullet).remove();
     return false;    
   }
-  if (bullet.offScreen()){
-    $(bullet).remove();
+  else if (bullet.offScreen()){
+    setTimeout(function(){
+      $("#"+bullet.id).remove();
+    }, 2500);
     return false;
   }
   else{
@@ -79,10 +83,12 @@ Bullet.prototype.unimpeded = function () {
 };
 
 Bullet.prototype.hit = function () {
+  console.log("IN THE HIT")
   var bullet = this;
   // this.game.army.//forEach(function(alien){
   var aliens = bullet.game.enemies;
   for(var i = 0; i < aliens.length; i++){
+    console.log("for aliens")
     console.log("in bullet hit loop");
     var alien = aliens[i];
     var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
@@ -99,7 +105,11 @@ Bullet.prototype.hit = function () {
 };
 
 Bullet.prototype.offScreen = function () {
-  return false;//write this later
+  if(this.yPosition <= 0){
+    return true;
+  } else {
+    return false;//write this later
+  }
 };
 
 var alienCounter = 0;
@@ -143,6 +153,7 @@ Game.prototype.alienSetUp = function () {
 Game.prototype.placeAliensOnPage = function () {
   var self = this;
   self.enemies.forEach(function(alien){
+    console.log("for each enemies")
     self.$container.append(alien.content);
     $('#invading-army #alien'+alien.id).css("left", "+="+alien.xPosition);
     $('#invading-army #alien'+alien.id).css("top", "+="+alien.yPosition);    
