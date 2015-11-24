@@ -37,12 +37,10 @@ var Bullet = function Bullet(ship, game) {
 };
 
 var shipShoot = function ($ship, game) {
-  console.log('bang');
   var bullet = new Bullet($ship, game);
   $('#'+bullet.id).css("left", "+="+bullet.xPosition);
   var counter = 0;
   while(bullet.unimpeded()){//unimpeded(bullet)){
-  console.log("while unimpeded")
     bullet.yPosition -= 10;
     counter += 10;
     $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
@@ -63,13 +61,12 @@ var onScreen = function (position) {
 };
 
 Bullet.prototype.unimpeded = function () {
-  console.log(this.yPosition, "YPOS")
   var bullet = this;
-  var enemyHit = bullet.hit();
-  if (enemyHit){
-    // debugger;
+  var enemyHitId = bullet.hit();
+  if (enemyHitId){
+    debugger;
     setTimeout(function(){
-      $("#alien"+enemyHit.id).remove();
+      $("#alien"+enemyHitId).remove();
       $("#"+bullet.id).remove();
     }, 2500);
     return false;    
@@ -86,20 +83,20 @@ Bullet.prototype.unimpeded = function () {
 };
 
 Bullet.prototype.hit = function () {
-  console.log("IN THE HIT")
   var bullet = this;
   // this.game.army.//forEach(function(alien){
   var aliens = bullet.game.enemies;
   for(var i = 0; i < aliens.length; i++){
-    console.log("for aliens")
-    console.log("in bullet hit loop");
     var alien = aliens[i];
     var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
     if (i == 79){
     }
     if (yDistance <= 20 && xDistance <=20){
-      return alien;
+      debugger;
+      var hitId = alien.id;
+      bullet.game.enemies = _.reject(aliens, function(alien){ return alien.id == hitId; });
+      return hitId;
     }
   }
   return false;
@@ -154,7 +151,6 @@ Game.prototype.alienSetUp = function () {
 Game.prototype.placeAliensOnPage = function () {
   var self = this;
   self.enemies.forEach(function(alien){
-    console.log("for each enemies")
     self.$container.append(alien.content);
     $('#invading-army #alien'+alien.id).css("left", "+="+alien.xPosition);
     $('#invading-army #alien'+alien.id).css("top", "+="+alien.yPosition);    
