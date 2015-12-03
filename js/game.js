@@ -94,14 +94,12 @@ Bullet.prototype.unimpeded = function () {
 Bullet.prototype.hit = function () {
   var bullet = this;
   // this.game.army.//forEach(function(alien){
-        debugger;
   var aliens = bullet.game.enemies;
   for(var i = 0; i < aliens.length; i++){
     var alien = aliens[i];
     var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
      if (i == 79){
-        debugger;
      }//this was made to only stop on one
     if (yDistance <= 20 && xDistance <=20){
       var hitId = alien.id;
