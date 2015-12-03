@@ -28,7 +28,7 @@ $(document).on('ready', function(e) {
 var bulletCounter = 0;
 
 var Bullet = function Bullet(ship) {
-  // this.game = game;//refactor to make ship apart of the game so that I can just pass ship in
+  this.game = ship.game;//refactor to make ship apart of the game so that I can just pass ship in
   // var startingPosition = ship.position();
   this.xPosition = ship.xPosition;
   this.yPosition = ship.yPosition;
@@ -94,14 +94,15 @@ Bullet.prototype.unimpeded = function () {
 Bullet.prototype.hit = function () {
   var bullet = this;
   // this.game.army.//forEach(function(alien){
+        debugger;
   var aliens = bullet.game.enemies;
   for(var i = 0; i < aliens.length; i++){
     var alien = aliens[i];
     var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
-    if (i == 79){
+     if (i == 79){
         debugger;
-    }
+     }//this was made to only stop on one
     if (yDistance <= 20 && xDistance <=20){
       var hitId = alien.id;
       bullet.game.enemies = _.reject(aliens, function(alien){ return alien.id == hitId; });
@@ -159,7 +160,7 @@ Game.prototype.startLoop = function () {
 
 Game.prototype.masterAnimater = function () {
   this.shiftControlShip();
-  // this.shiftControlAliens();
+  this.shiftControlAliens();
   this.shiftControlBullets();
 
 
@@ -184,7 +185,7 @@ Game.prototype.shiftControlBullets = function () {
 };
 
 Game.prototype.shiftBullet = function (bullet) {
-  if (bullet.unimpeded) {
+  if (bullet.unimpeded()) {
     bullet.yPosition -= 10;
     $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
   }
