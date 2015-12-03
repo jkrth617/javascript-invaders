@@ -39,13 +39,12 @@ var Bullet = function Bullet(ship, game) {
 var shipShoot = function ($ship, game) {
   var bullet = new Bullet($ship, game);
   $('#'+bullet.id).css("left", "+="+bullet.xPosition);
-  var counter = 0;
-  while(bullet.unimpeded()){//unimpeded(bullet)){
-    bullet.yPosition -= 10;
-    counter += 10;
-    $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
-  } 
-
+  game.bullets.push(bullet)
+  //below was the animation but this is being moved to the master animater
+  // while(bullet.unimpeded()){//unimpeded(bullet)){
+  //   bullet.yPosition -= 10;
+  //   $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
+  // } 
 };
 
 var moveShip = function ($target, movement) {
@@ -58,6 +57,10 @@ var moveShip = function ($target, movement) {
 
 var onScreen = function (position) {
   return true;
+};
+
+Bullet.prototype.shiftControlBullets = function () {
+
 };
 
 Bullet.prototype.unimpeded = function () {
@@ -134,10 +137,21 @@ Alien.prototype.calcYPosition = function(id) {
 
 var Game = function Game () {
   this.$container = $("#invading-army");
+  this.bullets = [];
   this.enemies = this.alienSetUp(); 
   this.shifter = 20;
   this.placeAliensOnPage();
+  this.startLoop();
   //this.startMotion();
+};
+
+Game.prototype.startLoop = function () {
+  this.coreLoopId = setInterval(this.masterAnimater.bind(this), 100);//the loop is saved because later I could create a pause function
+};
+
+Game.prototype.masterAnimater = function () {
+  this.shiftControlAliens();
+
 };
 
 Game.prototype.startMotion = function () {
@@ -160,7 +174,7 @@ Game.prototype.gameInProgress = function () {
   return true;
 }
 
-Game.prototype.shiftControl = function () {
+Game.prototype.shiftControlAliens = function () {
 var self = this;
   if(self.againstBound()){
     self.shiftDown();
