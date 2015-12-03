@@ -1,21 +1,22 @@
 $(document).on('ready', function(e) {
   
   var game = new Game;
+  // var ship = new Ship(game);
 
   $(document).keydown(function(e) {
     e.preventDefault(); // prevent the default action (scroll / move caret)
-    var $ship = $('#space-ship');
+    // var $ship = $('#space-ship');
     switch(e.which) {
       case 37: // left
-        moveShip($ship, -20);
+        game.ship.moveShip(-20);
       break;
 
       case 39: // right
-        moveShip($ship, 20);
+        game.ship.moveShip(20);
       break;
 
       case 32:
-        shipShoot($ship, game);
+        game.ship.shipShoot();
       break
 
       default: return; // exit this handler for other keys
@@ -28,23 +29,25 @@ var bulletCounter = 0;
 
 var Bullet = function Bullet(ship) {
   // this.game = game;//refactor to make ship apart of the game so that I can just pass ship in
-  var startingPosition = ship.position();
-  this.xPosition = startingPosition.left;
-  this.yPosition = startingPosition.top;
-  $('#'+this.id).css("left", "+="+this.xPosition);
+  // var startingPosition = ship.position();
+  this.xPosition = ship.xPosition;
+  this.yPosition = ship.yPosition;
   bulletCounter ++;
-  ship.before("<div id = 'bullet"+bulletCounter+"' class='bullet'>.</div>");
+  ship.$ship.before("<div id = 'bullet"+bulletCounter+"' class='bullet'>.</div>");
   this.id = "bullet"+bulletCounter;
+  $('#'+this.id).css("left", "+="+this.xPosition);
 };
 
 var Ship = function Ship(game){
   this.game = game;
-  this.$ship = var $ship = $('#space-ship');
+  this.xPosition = 650;//centered with px
+  this.yPosition = 289;//50% height in px
+  this.$ship = $ship = $('#space-ship');
 }
 
 Ship.prototype.shipShoot = function () {
   var self = this;
-  var bullet = new Bullet(self.$ship);
+  var bullet = new Bullet(self);
   self.game.bullets.push(bullet)
   //below was the animation but this is being moved to the master animater
   // while(bullet.unimpeded()){//unimpeded(bullet)){
@@ -53,23 +56,13 @@ Ship.prototype.shipShoot = function () {
   // } 
 };
 
-Game.prototype.shiftControlBullets = function () {
+Ship.prototype.moveShip = function (movement) {
   var self = this;
-  self.bullets.forEach(self.shiftBullet(bullet))
-};
-
-Game.prototype.shiftBullet = function (bullet) {
-  if (bullet.unimpeded) {
-    bullet.yPosition -= 10;
-    $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
-  }
-};
-
-var moveShip = function ($target, movement) {
-  var pos = $target.position().left;
-  if (onScreen(pos)){
-    var newPos = pos + movement + "";//coerce into a string
-    $target.animate({ left: newPos }, 100);
+  // var pos = self.$ship.position().left;
+  if (onScreen(self.xPosition)){
+    self.xPosition += movement;
+    // var newPos = pos + movement + "";//coerce into a string
+    // self.$ship.animate({ left: newPos }, 100);
   }
 };
 
@@ -81,7 +74,6 @@ Bullet.prototype.unimpeded = function () {
   var bullet = this;
   var enemyHitId = bullet.hit();
   if (enemyHitId){
-    debugger;
     setTimeout(function(){
       $("#alien"+enemyHitId).remove();
       $("#"+bullet.id).remove();
@@ -108,6 +100,7 @@ Bullet.prototype.hit = function () {
     var xDistance = Math.abs(alien.xPosition - bullet.xPosition);
     var yDistance = Math.abs(alien.yPosition - bullet.yPosition);
     if (i == 79){
+        debugger;
     }
     if (yDistance <= 20 && xDistance <=20){
       var hitId = alien.id;
@@ -126,7 +119,7 @@ Bullet.prototype.offScreen = function () {
   }
 };
 
-var alienCounter = 0;
+var alienCounter = 0;//this should be in Game
 
 var Alien = function Alien () {
   this.id = alienCounter;
@@ -150,6 +143,7 @@ Alien.prototype.calcYPosition = function(id) {
 //I can refactor this to just accept another thing like the 10 or 20 to DRY out the function calls but I dont know how its going to play out right now
 
 var Game = function Game () {
+  this.ship = new Ship(this);
   this.$container = $("#invading-army");
   this.bullets = [];
   this.enemies = this.alienSetUp(); 
@@ -164,9 +158,15 @@ Game.prototype.startLoop = function () {
 };
 
 Game.prototype.masterAnimater = function () {
-  this.shiftControlAliens();
+  this.shiftControlShip();
+  // this.shiftControlAliens();
   this.shiftControlBullets();
 
+
+};
+
+Game.prototype.shiftControlShip = function () {
+  $(this.ship.$ship).animate({ left: this.ship.xPosition.toString() }, 50);
 };
 
 Game.prototype.startMotion = function () {
@@ -175,6 +175,18 @@ Game.prototype.startMotion = function () {
   while (x<1000){//self.gameInProgress()){
     self.shiftControl();
     x++;
+  }
+};
+
+Game.prototype.shiftControlBullets = function () {
+  var self = this;
+  self.bullets.forEach(self.shiftBullet)
+};
+
+Game.prototype.shiftBullet = function (bullet) {
+  if (bullet.unimpeded) {
+    bullet.yPosition -= 10;
+    $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
   }
 };
 
