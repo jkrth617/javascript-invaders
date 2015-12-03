@@ -26,25 +26,43 @@ $(document).on('ready', function(e) {
 
 var bulletCounter = 0;
 
-var Bullet = function Bullet(ship, game) {
-  this.game = game;//refactor to make ship apart of the game so that I can just pass ship in
+var Bullet = function Bullet(ship) {
+  // this.game = game;//refactor to make ship apart of the game so that I can just pass ship in
   var startingPosition = ship.position();
   this.xPosition = startingPosition.left;
   this.yPosition = startingPosition.top;
+  $('#'+this.id).css("left", "+="+this.xPosition);
   bulletCounter ++;
   ship.before("<div id = 'bullet"+bulletCounter+"' class='bullet'>.</div>");
   this.id = "bullet"+bulletCounter;
 };
 
-var shipShoot = function ($ship, game) {
-  var bullet = new Bullet($ship, game);
-  $('#'+bullet.id).css("left", "+="+bullet.xPosition);
-  game.bullets.push(bullet)
+var Ship = function Ship(game){
+  this.game = game;
+  this.$ship = var $ship = $('#space-ship');
+}
+
+Ship.prototype.shipShoot = function () {
+  var self = this;
+  var bullet = new Bullet(self.$ship);
+  self.game.bullets.push(bullet)
   //below was the animation but this is being moved to the master animater
   // while(bullet.unimpeded()){//unimpeded(bullet)){
   //   bullet.yPosition -= 10;
   //   $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
   // } 
+};
+
+Game.prototype.shiftControlBullets = function () {
+  var self = this;
+  self.bullets.forEach(self.shiftBullet(bullet))
+};
+
+Game.prototype.shiftBullet = function (bullet) {
+  if (bullet.unimpeded) {
+    bullet.yPosition -= 10;
+    $('#'+bullet.id).animate({ top: bullet.yPosition }, 50);
+  }
 };
 
 var moveShip = function ($target, movement) {
@@ -57,10 +75,6 @@ var moveShip = function ($target, movement) {
 
 var onScreen = function (position) {
   return true;
-};
-
-Bullet.prototype.shiftControlBullets = function () {
-
 };
 
 Bullet.prototype.unimpeded = function () {
@@ -151,6 +165,7 @@ Game.prototype.startLoop = function () {
 
 Game.prototype.masterAnimater = function () {
   this.shiftControlAliens();
+  this.shiftControlBullets();
 
 };
 
